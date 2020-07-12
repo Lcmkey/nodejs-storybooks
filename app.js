@@ -76,7 +76,8 @@ app.use(
     secret: SESSEION_SECRET,
     resave: false,
     saveUninitialized: false,
-    store: new MongoStore({ mongooseConnection: mongoose.connection })
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    cookie: { maxAge: 24 * 60 * 60 * 1000 }
   })
 );
 
