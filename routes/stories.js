@@ -34,6 +34,10 @@ router.get("/:id", ensureAuth, async (req, res) => {
       return res.render("error/404");
     }
 
+    if (story.user._id != req.user.id && story.status != "public") {
+      return res.redirect("/stories");
+    }
+
     res.render("stories/show", {
       story
     });
@@ -44,15 +48,26 @@ router.get("/:id", ensureAuth, async (req, res) => {
 });
 
 router.get("/edit/:id", ensureAuth, async (req, res) => {
-  const story = await Story.findOne({
-    _id: req.params.id
-  }).lean();
+  try {
+    const story = await Story.findOne({
+      _id: req.params.id
+    }).lean();
 
-  if (!story) {
-    return res.redirect("/stories");
+    if (!story) {
+      return res.render("error/404");
+    }
+    console.log(story);
+    if (story.user != req.user.id) {
+      return res.redirect("/stories");
+    }
+
+    res.render("stories/edit", {
+      story
+    });
+  } catch (err) {
+    console.log(err);
+    res.render("error/500");
   }
-
-  res.render("stories/edit", { story });
 });
 
 router.post("/", ensureAuth, async (req, res) => {

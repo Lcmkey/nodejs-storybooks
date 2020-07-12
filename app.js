@@ -22,7 +22,8 @@ const {
   stripTags,
   truncate,
   editIcon,
-  select
+  select,
+  isPublic
 } = require("./helper/hbs");
 
 // Load config
@@ -51,7 +52,7 @@ app.use(
   })
 );
 
-const { PORT = 5000, NODE_ENV } = process.env;
+const { PORT = 5000, NODE_ENV, SESSEION_SECRET } = process.env;
 
 // Logging
 if (NODE_ENV === "development") {
@@ -62,7 +63,7 @@ if (NODE_ENV === "development") {
 app.engine(
   ".hbs",
   exphbs({
-    helpers: { formatDate, stripTags, truncate, editIcon, select },
+    helpers: { formatDate, stripTags, truncate, editIcon, select, isPublic },
     defaultLayout: "main",
     extname: ".hbs"
   })
@@ -72,7 +73,7 @@ app.set("view engine", ".hbs");
 // Sessions
 app.use(
   session({
-    secret: "session_secret",
+    secret: SESSEION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: new MongoStore({ mongooseConnection: mongoose.connection })

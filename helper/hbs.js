@@ -42,5 +42,8 @@ module.exports = {
         new RegExp(">" + selected + "</option>"),
         ' selected="selected"$&'
       );
+  },
+  isPublic: status => {
+    return status === "public";
   }
 };
